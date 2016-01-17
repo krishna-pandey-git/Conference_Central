@@ -39,7 +39,7 @@ class SendConfirmationEmailHandler(webapp2.RequestHandler):
 
 class SetFeaturedSpeaker(webapp2.RequestHandler):
     def post(self):
-        """Send email confirming Conference creation."""
+        """Sets the value for the feature speaker and sessions he is delivering."""
         announcement = ConferenceApi._featuredSpeaker(
             self.request.get('speaker'), self.request.get('websafeConferenceKey'))
 

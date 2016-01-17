@@ -38,17 +38,36 @@ details like academic and their personal experience in the industry they work in
 
 Session has been implemented as a child of conference. Reason for this is logically speaking session belongs to a conference.
 and also querying them become easy for sessions in a particular conference.
+Session model has been provided with 7 property to hold different details associated with
+a session.
+	- name: Its a required property of the Session and its of type string.
+	- highlights: Its a string property which will give us key info about the session
+	- speaker: Its string property and has name of the person giving the session.
+	- duration: Duration of the session. Its an integer property representing duration in minutes.
+	- typeOfSession: Its a string property. Give us detail like what type of session e.g. WorkShop, Intro etc.
+	- date: Its a datetime property. tells us the occurence date of the session.
+	- startTime: Its a DateTimeProperty. Earlier opted for TimeProperty but it was not working properly.
 
 ##Session wishlist working
+endpoint: addSessionToWishlist(self, request)
 
-Note: we need session's websafe url key. For this I have implemented another endpoint ""updateWebSafeSessionKey" its purpose is to update
-websafesessionkey in datastore. We can get websafesessionkey for each session entity from DataStore after executing this endpoint once.
+WishList: Its the model that has been created to store wishlist for a particular user.
+It has two property.
+	- sessionKeys: It holds multiple keys of the sessions that user has added in wishlist.
+	  As it holds key of the Session this property is of KeyProperty type and it can hold
+	  multiple keys.
+	- mainEmail: Its the mainEmail id of the user. It helps to uniquely identify each user
+	  wish list. Its a normal StringProperty.
+
+Working: we need session's websafe url key to call addToWishlist endpoint. In order to get
+websafeurl for the session we need to call any of the endpoints which returns sessions 
+as response. From the response we can copy the websafeurl for the session.
 
 In order to add sessions to your wish list you must know websafesessionkey before hand. you can add any session in your wishlist.
 whether you already registered for that conference or not does not matter.
 Multiple sessions can be added in one go.
 
-similarly to delete sessions from your WishList you need to have the websafesessionkey.
+similarly to delete sessions from your WishList you need to have the websafesessionkey first.
 
 ##Additional Queries
 
@@ -57,7 +76,7 @@ This is similar to what we have for conference where we can have multiple filter
 
 ## Inequality filter on two different property
 
-Issue : we can apply inequality operator on two different property in a query. Its a datastore rule that we can not change.
+Issue : we can't apply inequality operator on two different property in a query. Its a datastore rule that we can not change.
 Solution: First we will apply only the first inequality and then get the result in a list of sessions. Then we copy the whole list
 	in a different list. Now while iterating over the previous list we will remove the object from the second list if it does not satisfy the 
 	second inequality condition on different poperty.

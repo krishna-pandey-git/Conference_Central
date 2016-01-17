@@ -40,26 +40,19 @@ class ProfileForm(messages.Message):
     teeShirtSize = messages.EnumField('TeeShirtSize', 3)
     conferenceKeysToAttend = messages.StringField(4, repeated=True)
 
-class WishList(ndb.Model):
-    sessionKeys = ndb.StringProperty(repeated=True)
-    mainEmail = ndb.StringProperty()
-
-class WishListRequestForm(messages.Message):
-    """ WishListForm -- Wishlist outbound form Message """
-    sessionKeys = messages.StringField(1, repeated=True) # websafesessionkey expected
-
 class Session(ndb.Model):
+    """Session -- Session object that are associated with a Conference """
     name = ndb.StringProperty()
     highlights = ndb.StringProperty()
     speaker = ndb.StringProperty()
     duration = ndb.IntegerProperty()
     typeOfSession = ndb.StringProperty()
     date = ndb.DateProperty()
-    startTime = ndb.TimeProperty()
-    websafeSessionKey = ndb.StringProperty()
+    startTime = ndb.DateTimeProperty() #TimeProperty was not wroking as expected
 
 class SessionForm(messages.Message):
-    name = messages.StringField(1)
+    """SessionForm -- Session outbound form message"""
+    name = messages.StringField(1, required=True)
     highlights = messages.StringField(2)
     speaker = messages.StringField(3)
     duration = messages.IntegerField(4)
@@ -69,6 +62,7 @@ class SessionForm(messages.Message):
     websafeSessionKey = messages.StringField(8)
 
 class SessionForms(messages.Message):
+    """SessionForms -- Multiple Session outbound form messages"""
     sessions = messages.MessageField(SessionForm, 1, repeated=True)
 
 class BooleanMessage(messages.Message):
@@ -124,6 +118,16 @@ class TeeShirtSize(messages.Enum):
     XXL_W = 13
     XXXL_M = 14
     XXXL_W = 15
+
+class WishList(ndb.Model):
+    """WishList -- WishList object for a User """
+    sessionKeys = ndb.KeyProperty(kind=Session, repeated=True)# stored key value
+    mainEmail = ndb.StringProperty()
+
+class WishListRequestForm(messages.Message):
+    """ WishListForm -- Wishlist outbound form Message """
+    sessionKeys = messages.StringField(1, repeated=True) # websafesessionkey expected
+
 
 class ConferenceQueryForm(messages.Message):
     """ConferenceQueryForm -- Conference query inbound form message"""
